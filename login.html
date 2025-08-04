@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Signup with Captcha</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      width: 400px;
+      perspective: 1000px;
+    }
+
+    .card {
+      width: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .flipped {
+      transform: rotateY(180deg);
+    }
+
+    .form-box {
+      position: absolute;
+      width: 100%;
+      padding: 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      backface-visibility: hidden;
+    }
+
+    .form-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-box button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .form-box button:hover {
+      background: #45a049;
+    }
+
+    .captcha-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .refresh-btn {
+      padding: 5px 10px;
+      font-size: 14px;
+      background: #ccc;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .timer {
+      font-size: 13px;
+      text-align: right;
+      color: #555;
+    }
+
+    .google-btn {
+      background: #4285F4;
+      color: white;
+      padding: 10px;
+      border: none;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .google-btn:hover {
+      background: #357ae8;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+      color: #007bff;
+    }
+
+    /* Back form for signup */
+    .signup-form {
+      transform: rotateY(180deg);
+    }
+
+    /* Success message styling from previous code can be reused here */
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card" id="cardBox">
+
+      <!-- Login Form -->
+      <div class="form-box login-form">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <input type="text" id="name" placeholder="Name" required>
+          <input type="email" id="email" placeholder="Email" required>
+
+          <div class="captcha-box">
+            <canvas id="captchaCanvas" width="120" height="40"></canvas>
+            <button type="button" class="refresh-btn" onclick="generateCaptcha()">↻</button>
+          </div>
+
+          <div class="timer" id="timer">Captcha expires in 60s</div>
+          <input type="text" id="captchaInput" placeholder="Enter captcha" required>
+
+          <button type="submit">Login</button>
+        </form>
+
+        <button class="google-btn">Login with Google</button>
+
+        <div class="toggle" onclick="flipCard()">Don't have an account? Sign up</div>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="form-box signup-form">
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+          <input type="text" placeholder="Full Name" required>
+          <input type="email" placeholder="Gmail" required>
+          <input type="password" placeholder="Password" required>
+          <input type="text" placeholder="Address" required>
+          <button type="submit">Create Account</button>
+        </form>
+
+        <div class="toggle" onclick="flipCard()">Already have an account? Login</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentCaptcha = "";
+    let countdownInterval;
+    let countdownTime = 60;
+
+    function generateCaptcha() {
+      const canvas = document.getElementById("captchaCanvas");
+      const ctx = canvas.getContext("2d");
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$&!";
+      let captcha = "";
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#f0f0f0";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "20px Arial";
+      ctx.fillStyle = "#000";
+
+      for (let i = 0; i < 6; i++) {
+        const char = chars.charAt(Math.floor(Math.random() * chars.length));
+        captcha += char;
+        ctx.fillText(char, 15 * i + 5, 30);
+      }
+
+      currentCaptcha = captcha;
+      resetTimer();
+    }
+
+    function resetTimer() {
+      clearInterval(countdownInterval);
+      countdownTime = 60;
+      updateTimerText();
+      countdownInterval = setInterval(() => {
+        countdownTime--;
+        updateTimerText();
+        if (countdownTime <= 0) {
+          clearInterval(countdownInterval);
+          generateCaptcha();
+        }
+      }, 1000);
+    }
+
+    function updateTimerText() {
+      document.getElementById("timer").innerText = `Captcha expires in ${countdownTime}s`;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const captchaInput = document.getElementById("captchaInput").value.trim();
+
+      if (captchaInput !== currentCaptcha) {
+        alert("Captcha does not match!");
+        generateCaptcha();
+        return;
+      }
+
+      // Login success
+      alert("Login successful!");
+    });
+
+    function flipCard() {
+      const card = document.getElementById("cardBox");
+      card.classList.toggle("flipped");
+    }
+
+    window.onload = generateCaptcha;
+  </script>
+
+</body>
+</html>
