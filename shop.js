@@ -159,8 +159,8 @@ function createProductCard(product) {
         <div class="product-info">
             <h3 class="product-name">${product.name}</h3>
             <p class="product-description">${product.description}</p>
-            <div class="product-price">₹${product.price.toFixed(2)}</div>
-            
+            <div class="product-price">$${product.price.toFixed(2)}</div>
+            <div class="product-price">₹${product.price}</div>
             <div class="product-actions">
                 <button class="btn-primary" onclick="addToCart(${product.id})">
                     <i class="fas fa-cart-plus"></i> Add to Cart
@@ -420,31 +420,3 @@ modalStyle.textContent = `
     }
 `;
 document.head.appendChild(modalStyle);
- const counters = document.querySelectorAll('.counter');
-    const duration = 2000; // total duration in milliseconds
-
-    counters.forEach(counter => {
-      const target = +counter.getAttribute('data-target');
-      const suffix = counter.getAttribute('data-suffix');
-      const start = 0;
-      const increment = target / (duration / 20);
-
-      let count = start;
-
-      const updateCounter = () => {
-        count += increment;
-        if (count < target) {
-          counter.innerText = Math.floor(count);
-          setTimeout(updateCounter, 20);
-        } else {
-          // Set final formatted value
-          if (suffix === 'k+') {
-            counter.innerText = (target / 1000).toFixed(0) + 'k+';
-          } else {
-            counter.innerText = target + suffix;
-          }
-        }
-      };
-
-      updateCounter();
-    });
