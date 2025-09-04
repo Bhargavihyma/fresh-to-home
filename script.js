@@ -43,11 +43,9 @@ function changeSlide(direction) {
     
     if (slides.length === 0) return;
     
-    // Remove active class from current slide and dot
     slides[currentSlideIndex].classList.remove('active');
     dots[currentSlideIndex].classList.remove('active');
     
-    // Calculate new slide index
     currentSlideIndex += direction;
     
     if (currentSlideIndex >= slides.length) {
@@ -56,7 +54,6 @@ function changeSlide(direction) {
         currentSlideIndex = slides.length - 1;
     }
     
-    // Add active class to new slide and dot
     slides[currentSlideIndex].classList.add('active');
     dots[currentSlideIndex].classList.add('active');
 }
@@ -67,28 +64,22 @@ function currentSlide(index) {
     
     if (slides.length === 0) return;
     
-    // Remove active class from current slide and dot
     slides[currentSlideIndex].classList.remove('active');
     dots[currentSlideIndex].classList.remove('active');
     
-    // Set new slide index
     currentSlideIndex = index - 1;
     
-    // Add active class to new slide and dot
     slides[currentSlideIndex].classList.add('active');
     dots[currentSlideIndex].classList.add('active');
 }
 
 // Service tabs functionality
 function showService(serviceId) {
-    // Remove active class from all tabs and panels
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.service-panel').forEach(panel => panel.classList.remove('active'));
     
-    // Add active class to clicked tab
     event.target.classList.add('active');
     
-    // Show corresponding service panel
     const panel = document.getElementById(serviceId);
     if (panel) {
         panel.classList.add('active');
@@ -97,13 +88,12 @@ function showService(serviceId) {
 
 // Navigation functionality
 function initializeNavigation() {
-    // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                const offsetTop = target.offsetTop - 70; // Account for fixed navbar
+                const offsetTop = target.offsetTop - 70;
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
@@ -112,7 +102,6 @@ function initializeNavigation() {
         });
     });
     
-    // Update active navigation link on scroll
     window.addEventListener('scroll', updateActiveNavLink);
 }
 
@@ -140,49 +129,27 @@ function updateActiveNavLink() {
 // Authentication functionality
 function initializeAuth() {
     // Check if user is already logged in (from localStorage)
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
+    const savedName = localStorage.getItem("userName");
+    const savedEmail = localStorage.getItem("userEmail");
+
+    if (savedName && savedEmail) {
+        currentUser = { name: savedName, email: savedEmail };
         showUserProfile();
     }
-    
-    // Add event listeners
-    const loginBtn = document.getElementById('loginBtn');
+
     const logoutBtn = document.getElementById('logoutBtn');
-    
-    if (loginBtn) {
-        loginBtn.addEventListener('click', handleGoogleLogin);
-    }
-    
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
 }
 
-function handleGoogleLogin() {
-    // Simulate Google login (in real implementation, use Google OAuth)
-    // For demo purposes, we'll create a mock user
-    const mockUser = {
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        picture: null
-    };
-    
-    // In a real implementation, you would integrate with Google OAuth API
-    // This is just for demonstration
-    currentUser = mockUser;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    showUserProfile();
-    
-    // Show success message
-    showNotification('Successfully signed in with Google!', 'success');
-}
-
 function handleLogout() {
     currentUser = null;
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
     showLoginButton();
     showNotification('Successfully logged out!', 'info');
+    window.location.href = "login.html";
 }
 
 function showUserProfile() {
@@ -192,7 +159,7 @@ function showUserProfile() {
     const userEmail = document.getElementById('userEmail');
     
     if (userProfile && loginBtn && userName && userEmail && currentUser) {
-        userProfile.style.display = 'block';
+        userProfile.style.display = 'flex';
         loginBtn.style.display = 'none';
         userName.textContent = currentUser.name;
         userEmail.textContent = currentUser.email;
@@ -216,7 +183,6 @@ function goToShop() {
 
 // Utility functions
 function showNotification(message, type = 'info') {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.innerHTML = `
@@ -224,7 +190,6 @@ function showNotification(message, type = 'info') {
         <span>${message}</span>
     `;
     
-    // Add styles
     notification.style.cssText = `
         position: fixed;
         top: 90px;
@@ -242,10 +207,8 @@ function showNotification(message, type = 'info') {
         animation: slideInRight 0.3s ease-out;
     `;
     
-    // Add to document
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOutRight 0.3s ease-in';
         setTimeout(() => {
@@ -256,7 +219,7 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Add notification animations to CSS
+// Notification animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -282,28 +245,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-  const counters = document.querySelectorAll('.counter');
-  const speed = 200; // lower = faster
 
-  counters.forEach(counter => {
-    const updateCount = () => {
-      const target = +counter.getAttribute('data-target');
-      const count = +counter.innerText;
-
-      const increment = target / speed;
-
-      if (count < target) {
-        counter.innerText = Math.ceil(count + increment);
-        setTimeout(updateCount, 20);
-      } else {
-        // Format final output with suffix
-        if (target >= 1000) {
-          counter.innerText = (target / 1000).toFixed(1).replace('.0', '') + 'k+';
-        } else {
-          counter.innerText = target + '+';
-        }
-      }
-    };
-
-    updateCount();
-  });
