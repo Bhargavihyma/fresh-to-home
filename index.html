@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FreshHarvest - Fresh Vegetables Market</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -18,10 +17,10 @@
             </div>
             
             <div class="nav-menu">
-                 <a href="index.html" class="nav-link">Home</a>
-                <a href="index.html" class="nav-link">About Us</a>
-                <a href="index.html" class="nav-link">Services</a>
-                <a href="shop.html" class="nav-link active">Shop</a>
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About Us</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="shop.html" class="nav-link">Shop</a>
             </div>
             
             <div class="nav-auth">
@@ -98,7 +97,7 @@
         </section>
 
         <!-- About Us Section -->
-        <section class="about-section">
+        <section id="about" class="about-section">
             <div class="container">
                 <div class="about-content">
                     <div class="about-text">
@@ -115,20 +114,68 @@
                             food should be accessible to everyone, which is why we offer competitive prices without 
                             compromising on quality.
                         </p>
-                   <div class="about-stats">
-  <div class="stat">
-    <h3 class="counter" data-target="15">0</h3>
-    <p>Years Experience</p>
-  </div>
-  <div class="stat">
-    <h3 class="counter" data-target="50">0</h3>
-    <p>Local Farms</p>
-  </div>
-  <div class="stat">
-    <h3 class="counter" data-target="10000">0</h3>
-    <p>Happy Customers</p>
-  </div>
+                      <div class="about-stats">
+    <div class="stat">
+        <h3 data-target="15">0</h3>
+        <p>Years Experience</p>
+    </div>
+    <div class="stat">
+        <h3 data-target="50">0</h3>
+        <p>Local Farms</p>
+    </div>
+    <div class="stat">
+        <h3 data-target="10000">0</h3>
+        <p>Happy Customers</p>
+    </div>
 </div>
+
+<script>
+    const counters = document.querySelectorAll('.stat h3');
+    const duration = 2000; // total animation time in ms (2s)
+    const frameRate = 20;  // update every 20ms
+    const steps = duration / frameRate; // total steps
+
+    counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / steps;
+        let count = 0;
+
+        const updateCount = () => {
+            count += increment;
+            if (count < target) {
+                counter.innerText = Math.floor(count);
+                setTimeout(updateCount, frameRate);
+            } else {
+                // Final value formatting
+                if (target >= 1000) {
+                    counter.innerText = (target / 1000) + "k+";
+                } else {
+                    counter.innerText = target + "+";
+                }
+            }
+        };
+        updateCount();
+    });
+</script>
+
+<style>
+.about-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin: 30px 0;
+}
+.stat h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d6a4f;
+}
+.stat p {
+    margin-top: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+</style>
 
                     </div>
                     <div class="about-image">
@@ -282,78 +329,61 @@
                         <button class="cta-btn secondary" onclick="goToShop()">View Our Catalog</button>
                     </div>
                     
-                    <p class="cta-note">Free delivery on orders over $50 • Same-day delivery available</p>
                     <p class="cta-note">Free delivery on orders over ₹2000 • Same-day delivery available</p>
                 </div>
             </div>
         </section>
+        <!-- Scroll to Top Button -->
+<button onclick="scrollToTop()" id="scrollTopBtn">↑</button>
+
+<script>
+// Get the button
+const scrollBtn = document.getElementById("scrollTopBtn");
+
+// Show button after scrolling 200px
+window.onscroll = function() {
+  if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+    scrollBtn.style.display = "block";
+  } else {
+    scrollBtn.style.display = "none";
+  }
+};
+
+// Scroll to top smoothly
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+</script>
+
+<style>
+#scrollTopBtn {
+  display: none;              /* hidden by default */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 22px;
+  border: none;
+  outline: none;
+  background-color: #2d6a4f;
+  color: white;
+  cursor: pointer;
+  padding: 12px 16px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
+}
+
+#scrollTopBtn:hover {
+  background-color: #161c19;
+}
+</style>
+
     </main>
- <footer>
-       <div class="footer-container">
-  <div class="footer-logo">
-    <div class="logo-text">🌿 LeafBite</div>
-    <div class="tagline">Freshness from Farm to Fork</div>
 
-   <div class="social-icons">
-  <a href="#" class="social-icon" title="Facebook">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" width="24" alt="Facebook">
-  </a>
-  <a href="#" class="social-icon" title="Instagram">
-    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111421.png" width="24" alt="Instagram">
-  </a>
-  <a href="#" class="social-icon" title="YouTube">
-    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384061.png" width="24" alt="YouTube">
-  </a>
-  <a href="#" class="social-icon" title="Pinterest">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733646.png" width="24" alt="Pinterest">
-  </a>
-</div>
-
-  </div>
-<div class="footer-gallery">
-  <h3>Our Produce</h3>
-  <div class="gallery">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg" alt="Tomato">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Broccoli_and_cross_section_edit.jpg" alt="Broccoli">
-    <img src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTEyL3Jhd3BpeGVsb2ZmaWNlMTFfY2Fycm90c19vbl9hX3doaXRlX2JhY2tncm91bmRfaW5fdGhlX3N0eWxlX29mX19mYjRjNzRkYS04ZmExLTRiYzQtYjlhZS1mMThkMTUyZmUxYWQucG5n.png    " alt="Carrot">
-    <img src="https://png.pngtree.com/png-vector/20240627/ourmid/pngtree-red-peeper-isolated-on-transparent-background-png-image_12896204.png" alt="Bell Pepper">
-  </div>
-</div>
-
-
-
-
-  <div class="footer-links">
-    <div class="link-column">
-      <h3>Explore</h3>
-      <ul>
-        <li><a href="#">Recipes</a></li>
-        <li><a href="#">Farmers</a></li>
-        <li><a href="#">Seasonal Picks</a></li>
-        <li><a href="#">Meal Plans</a></li>
-        <li><a href="#">Delivery</a></li>
-      </ul>
-    </div>
-
-    <div class="link-column">
-      <h3>Company</h3>
-      <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Join as a Vendor</a></li>
-        <li><a href="#">Sustainability</a></li>
-        <li><a href="#">Terms of Use</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-        
-        <div class="footer-bottom">
-            <div class="company-info">A Financial Times company</div>
-            <div class="copyright">Copyright © 2006—2023, The Next Web B.V. Made with <3 in Amsterdam.</div>
-        </div>
-    </footer>
     <script src="script.js"></script>
 </body>
 </html>
